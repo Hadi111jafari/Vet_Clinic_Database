@@ -12,9 +12,11 @@ SELECT * FROM animals WHERE weight_kg >= 10.4 AND weight_kg <= 17.3;
 
 
 BEGIN TRANSACTION;
-SAVEPOINT SP1;
-ROLLBACK TO SP1;
+UPDATE animals SET species = 'unspecified';
+SELECT species from animals;
 ROLLBACK;
+SELECT species from animals;
+
 
 UPDATE animals
 SET species = 'digimon'
@@ -32,7 +34,7 @@ ROLLBACK;
 SELECT * FROM animals;
 
 BEGIN TRANSACTION;
-DELETE FROM animals WHERE date_of_birth BETWEEN '2022-1-1' AND '2050-1-1';
+DELETE FROM animals WHERE date_of_birth >= '2022/01/01';
 SAVEPOINT SP1;
 UPDATE animals
 SET weight_kg = weight_kg * -1;
@@ -45,8 +47,8 @@ SELECT COUNT(name) FROM animals;
 SELECT COUNT(*) FROM animals WHERE escape_attempts = 0;
 SELECT AVG(weight_kg) FROM animals;
 SELECT MAX(escape_attempts) FROM animals;
-SELECT COUNT(neutered) FROM animals WHERE neutered = false;
-SELECT COUNT(neutered) FROM animals WHERE neutered = true;
+SELECT neutered, MAX(escape_attempts) FROM animals
+GROUP BY neutered;
 
 SELECT species, MIN(weight_kg) 
 FROM animals 
@@ -57,5 +59,5 @@ FROM animals
 GROUP BY species;
 
 SELECT species, AVG(escape_attempts) 
-FROM animals WHERE date_of_birth BETWEEN '1990-1-1' AND '2000-1-1'
+FROM animals WHERE date_of_birth BETWEEN '1990-1-1' AND '2000-31-12'
 GROUP BY species;
